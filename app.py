@@ -42,8 +42,9 @@ if uploaded_file is not None:
     # Preprocess the data (OneHotEncoding for categorical features)
     preprocessor = ColumnTransformer(
         transformers=[
-            ('categorical', OneHotEncoder(handle_unknown='ignore'), ['Genre', 'Director', 'Votes'])
-        ]
+            ('categorical', OneHotEncoder(handle_unknown='ignore'), ['Genre', 'Director'])
+        ],
+        remainder='passthrough'  # Keep the Votes column as it is
     )
 
     # Create a pipeline with preprocessing and regression
@@ -65,6 +66,19 @@ if uploaded_file is not None:
     # Display evaluation metrics
     st.write(f'Mean Squared Error: {mse}')
     st.write(f'R^2 Score: {r2}')
+
+    st.write("## Predict Movie Rating")
+    
+    # Input form for new movie data
+    genre = st.text_input("Genre")
+    director = st.text_input("Director")
+    votes = st.number_input("Votes", min_value=0)
+
+    if st.button("Predict Rating"):
+        # Make a prediction based on user input
+        input_data = pd.DataFrame([[genre, director, votes]], columns=['Genre', 'Director', 'Votes'])
+        prediction = pipeline.predict(input_data)
+        st.write(f"Predicted Rating: {prediction[0]:.2f}")
 
 # Run the Streamlit app
 if __name__ == '__main__':
