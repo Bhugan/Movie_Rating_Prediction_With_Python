@@ -1,3 +1,3 @@
-# Movie_Rating_Prediction_With_Python
+# Movie-Rating-Prediction-With-Python
 
 ## Predicts the rating of the movies using different attributes
