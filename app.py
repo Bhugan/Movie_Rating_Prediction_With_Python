@@ -36,13 +36,17 @@ if uploaded_file is not None:
     X = df[['Genre', 'Director', 'Votes']]
     y = df['Rating']
 
+    # Ensure 'Votes' is numeric
+    X['Votes'] = pd.to_numeric(X['Votes'], errors='coerce')
+    X = X.dropna(subset=['Votes'])
+
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Preprocess the data (OneHotEncoding for categorical features)
     preprocessor = ColumnTransformer(
         transformers=[
-            ('categorical', OneHotEncoder(handle_unknown='ignore'), ['Genre', 'Director'])
+            ('cat', OneHotEncoder(handle_unknown='ignore'), ['Genre', 'Director'])
         ],
         remainder='passthrough'  # Keep the Votes column as it is
     )
@@ -84,3 +88,4 @@ if uploaded_file is not None:
 if __name__ == '__main__':
     st.title('IMDb Movies Rating Predictor')
     st.write("Upload your IMDb Movies India CSV file to get started.")
+
