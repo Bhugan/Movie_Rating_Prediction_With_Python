@@ -30,15 +30,12 @@ if uploaded_file is not None:
 
     # Handle missing values
     df = df.dropna(subset=['Rating'])  # Drop rows where the target variable is missing
-    df = df.fillna('Votes')
+    df['Votes'] = pd.to_numeric(df['Votes'], errors='coerce')
+    df = df.dropna(subset=['Votes'])  # Ensure 'Votes' is numeric and drop rows where it's not
 
     # Define features and target variable
     X = df[['Genre', 'Director', 'Votes']]
     y = df['Rating']
-
-    # Ensure 'Votes' is numeric
-    X['Votes'] = pd.to_numeric(X['Votes'], errors='coerce')
-    X = X.dropna(subset=['Votes'])
 
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -88,4 +85,3 @@ if uploaded_file is not None:
 if __name__ == '__main__':
     st.title('IMDb Movies Rating Predictor')
     st.write("Upload your IMDb Movies India CSV file to get started.")
-
